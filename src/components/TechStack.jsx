@@ -154,7 +154,7 @@ export default function TechStack() {
       </div>
 
       <div className="tech-grid-container">
-        {techStackData.map((tool, index) => (
+        {techStackData.map((tool) => (
           <div
             key={tool.name}
             className="tech-icon-container"

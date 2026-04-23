@@ -253,29 +253,39 @@
   position: relative;
   z-index: 2;
   height: 100%;
-  padding: 2.5rem;
+  padding: 2rem 2.5rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  gap: 12px;
+  box-sizing: border-box;
 }
 
-/* Project title - make it stand out */
+/* Pushes title and siblings to the bottom when there's spare room,
+   but lets content scroll naturally when it overflows */
 .project-title {
-  font-size: 30px;
+  margin-top: auto;
+  font-size: 28px;
   font-weight: 700;
-  margin: 0px 0 15px 0;
-
+  margin-bottom: 4px;
   color: var(--green-bright);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Project description */
 .project-description {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--lightest-slate);
-  line-height: 1.6;
+  line-height: 1.5;
+  margin: 0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.project-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 /* =============================================
@@ -284,16 +294,16 @@
 .project-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 10px 0;
+  gap: 6px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .tag-pill {
-  padding: 6px 12px;
+  padding: 4px 10px;
   border-radius: 50px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--green-bright);
   border: 1px solid rgba(100, 217, 138, 0.3);
@@ -315,14 +325,15 @@
   gap: 15px;
   justify-content: flex-end;
   overflow: visible;
+  flex-shrink: 0;
 }
 
 .icon-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   color: var(--green-bright);
   transition:
     transform 0.15s ease,
@@ -337,8 +348,8 @@
 }
 
 .icon-link svg {
-  width: 25px;
-  height: 25px;
+  width: 22px;
+  height: 22px;
 }
 
 /* =============================================
@@ -396,16 +407,21 @@
 @media (max-width: 992px) {
   .directory-box {
     flex-direction: column;
-    height: auto;
-    height: 600px;
+    height: 640px;
   }
 
   .directory-sidebar {
     width: 100%;
-    max-height: 250px;
+    min-width: 0;
+    max-height: 180px;
     overflow: auto;
     border-right: none;
     border-bottom: 1px solid rgba(100, 217, 138, 0.1);
+  }
+
+  .directory-content {
+    flex: 1;
+    min-height: 0;
   }
 
   .project-overlay {
@@ -418,7 +434,11 @@
   }
 
   .project-title {
-    margin: 20px 0 15px 0;
+    font-size: 24px;
+  }
+
+  .project-description {
+    font-size: 15px;
   }
 
   .project-links {
@@ -438,11 +458,11 @@
 
 @media (max-width: 768px) {
   .directory-box {
-    height: 540px;
+    height: 620px;
   }
 
   .directory-sidebar {
-    max-height: 200px;
+    max-height: 160px;
   }
 
   .directory-square {
@@ -458,16 +478,17 @@
   }
 
   .project-title {
-    margin: 10px 0 15px 0;
     font-size: 20px;
   }
 
   .project-description {
-    font-size: 16px;
+    font-size: 14px;
+    line-height: 1.45;
   }
 
   .tag-pill {
     font-size: 12px;
+    padding: 3px 8px;
   }
 
   .directory-folder,
@@ -481,6 +502,12 @@
 
   .project-content {
     padding: 1.2rem;
+    gap: 8px;
+  }
+
+  .icon-link {
+    width: 24px;
+    height: 24px;
   }
 
   .icon-link svg {

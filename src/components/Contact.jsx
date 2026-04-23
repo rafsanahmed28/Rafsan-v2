@@ -175,9 +175,9 @@ export default function Contact() {
       </div>
       <div className="contact-intro">
         <p>
-          I'm currently exploring opportunities in AI Automation and workflow orchestration, and I'm
-          always open to connecting with like-minded professionals. If you have a role, project, or
-          collaboration in mind, I’d love to hear from you!
+          I&apos;m currently exploring opportunities in AI Automation and workflow orchestration,
+          and I&apos;m always open to connecting with like-minded professionals. If you have a role,
+          project, or collaboration in mind, I’d love to hear from you!
         </p>
       </div>
       <div className="contact-container">
@@ -248,7 +248,7 @@ export default function Contact() {
         <div className="success-message" ref={successRef} style={{ display: "none" }}>
           <Icon name="CheckCircle" className="success-icon" />
           <h3>Thank you for reaching out.</h3>
-          <p>I'll get back to you soon.</p>
+          <p>I&apos;ll get back to you soon.</p>
           <button className="reset-btn" onClick={handleReset}>
             Send Another Message
           </button>

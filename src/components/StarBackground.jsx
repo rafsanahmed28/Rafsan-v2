@@ -1,30 +1,32 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef, useMemo, Suspense } from "react";
+import { useRef, useState, Suspense } from "react";
+
+function generateStarGeometry(count) {
+  const positions = [];
+  const sizes = [];
+  const opacities = [];
+  for (let i = 0; i < count; i++) {
+    const phi = Math.acos(2 * Math.random() - 1);
+    const theta = 2 * Math.PI * Math.random();
+    const r = 1.2 * Math.cbrt(Math.random());
+    positions.push(
+      r * Math.sin(phi) * Math.cos(theta),
+      r * Math.sin(phi) * Math.sin(theta),
+      r * Math.cos(phi),
+    );
+    sizes.push(0.012 + Math.random() * 0.008);
+    opacities.push(0.3 + Math.random() * 0.2);
+  }
+  return {
+    positions: new Float32Array(positions),
+    sizes: new Float32Array(sizes),
+    opacities: new Float32Array(opacities),
+  };
+}
 
 function Stardust({ count = 1750 }) {
   const ref = useRef();
-  const { positions, sizes, opacities } = useMemo(() => {
-    const positions = [];
-    const sizes = [];
-    const opacities = [];
-    for (let i = 0; i < count; i++) {
-      const phi = Math.acos(2 * Math.random() - 1);
-      const theta = 2 * Math.PI * Math.random();
-      const r = 1.2 * Math.cbrt(Math.random());
-      positions.push(
-        r * Math.sin(phi) * Math.cos(theta),
-        r * Math.sin(phi) * Math.sin(theta),
-        r * Math.cos(phi),
-      );
-      sizes.push(0.012 + Math.random() * 0.008);
-      opacities.push(0.3 + Math.random() * 0.2);
-    }
-    return {
-      positions: new Float32Array(positions),
-      sizes: new Float32Array(sizes),
-      opacities: new Float32Array(opacities),
-    };
-  }, [count]);
+  const [{ positions, sizes, opacities }] = useState(() => generateStarGeometry(count));
 
   useFrame((_, delta) => {
     if (ref.current) {
@@ -77,7 +79,7 @@ function Stardust({ count = 1750 }) {
   );
 }
 
-export const StarBackground = (props) => (
+export const StarBackground = () => (
   <group rotation={[0, 0, Math.PI / 4]}>
     <Stardust count={1750} />
   </group>

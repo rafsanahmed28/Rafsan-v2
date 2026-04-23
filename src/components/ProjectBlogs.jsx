@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SiMedium } from "react-icons/si";
@@ -123,12 +123,141 @@ const ProjectBlogs = () => {
     };
   }, []);
 
+  const changeSlide = useCallback(
+    (newIndex) => {
+      if (isAnimating || newIndex === currentSlide) return;
+      setIsAnimating(true);
+
+      const direction = newIndex > currentSlide ? 1 : -1;
+      const outgoing = slidesRef.current[currentSlide];
+      const incoming = slidesRef.current[newIndex];
+      const outgoingText = slideTextRefs.current[currentSlide];
+      const incomingText = slideTextRefs.current[newIndex];
+
+      // Update indicators
+      gsap.to(dotsRef.current[currentSlide], {
+        backgroundColor: "var(--lightest-slate)",
+        width: 8,
+        borderRadius: "50%",
+        duration: 0.3,
+        ease: "power1.inOut",
+      });
+
+      gsap.to(dotsRef.current[newIndex], {
+        backgroundColor: "var(--green-bright)",
+        width: 20,
+        borderRadius: "4px",
+        duration: 0.3,
+        ease: "power1.inOut",
+      });
+
+      // Standard transition timeline
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setCurrentSlide(newIndex);
+          setIsAnimating(false);
+
+          // Reset position of the outgoing slide
+          gsap.set(outgoing, {
+            x: direction > 0 ? "-100%" : "100%",
+          });
+        },
+      });
+
+      // Fade out current text content
+      if (outgoingText && outgoingText.children) {
+        tl.to(
+          Array.from(outgoingText.children),
+          {
+            opacity: 0,
+            y: -10,
+            duration: 0.4,
+            stagger: 0.05,
+            ease: "power1.in",
+          },
+          0,
+        );
+      }
+
+      // Standard slide transition
+      tl.to(
+        outgoing,
+        {
+          x: direction > 0 ? "-100%" : "100%",
+          opacity: 0,
+          duration: 0.8,
+          ease: "power1.inOut",
+        },
+        0,
+      );
+
+      // Prepare incoming slide
+      gsap.set(incoming, {
+        x: direction > 0 ? "100%" : "-100%",
+        opacity: 0,
+      });
+
+      // Bring in new slide
+      tl.to(
+        incoming,
+        {
+          x: "0%",
+          opacity: 1,
+          duration: 0.8,
+          ease: "power1.out",
+        },
+        0.1,
+      );
+
+      // Bring in new text
+      if (incomingText && incomingText.children) {
+        const incomingElements = Array.from(incomingText.children);
+
+        tl.fromTo(
+          incomingElements,
+          {
+            opacity: 0,
+            y: 10,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: "power1.out",
+          },
+          0.4,
+        );
+      }
+    },
+    [isAnimating, currentSlide],
+  );
+
+  const goToNextSlide = useCallback(() => {
+    const newIndex = (currentSlide + 1) % blogArticles.length;
+    changeSlide(newIndex);
+  }, [currentSlide, changeSlide]);
+
+  const goToPrevSlide = useCallback(() => {
+    const newIndex = (currentSlide - 1 + blogArticles.length) % blogArticles.length;
+    changeSlide(newIndex);
+  }, [currentSlide, changeSlide]);
+
   useEffect(() => {
     if (!slideshowRef.current) return;
 
     let touchStartX = 0;
     let touchEndX = 0;
     let isSwiping = false;
+
+    const handleSwipe = () => {
+      const swipeThreshold = 50;
+      if (touchEndX < touchStartX - swipeThreshold) {
+        goToNextSlide();
+      } else if (touchEndX > touchStartX + swipeThreshold) {
+        goToPrevSlide();
+      }
+    };
 
     const handleTouchStart = (e) => {
       touchStartX = e.changedTouches[0].screenX;
@@ -137,7 +266,7 @@ const ProjectBlogs = () => {
 
     const handleTouchMove = (e) => {
       if (!isSwiping) return;
-      e.preventDefault(); // Prevent page scrolling while swiping
+      e.preventDefault();
     };
 
     const handleTouchEnd = (e) => {
@@ -145,18 +274,6 @@ const ProjectBlogs = () => {
       touchEndX = e.changedTouches[0].screenX;
       handleSwipe();
       isSwiping = false;
-    };
-
-    const handleSwipe = () => {
-      if (isAnimating) return;
-
-      const swipeThreshold = 50; // Minimum distance for a swipe
-
-      if (touchEndX < touchStartX - swipeThreshold) {
-        goToNextSlide();
-      } else if (touchEndX > touchStartX + swipeThreshold) {
-        goToPrevSlide();
-      }
     };
 
     const container = slideshowRef.current;
@@ -169,124 +286,7 @@ const ProjectBlogs = () => {
       container.removeEventListener("touchmove", handleTouchMove);
       container.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [isAnimating]);
-
-  const changeSlide = (newIndex) => {
-    if (isAnimating || newIndex === currentSlide) return;
-    setIsAnimating(true);
-
-    const direction = newIndex > currentSlide ? 1 : -1;
-    const outgoing = slidesRef.current[currentSlide];
-    const incoming = slidesRef.current[newIndex];
-    const outgoingText = slideTextRefs.current[currentSlide];
-    const incomingText = slideTextRefs.current[newIndex];
-
-    // Update indicators
-    gsap.to(dotsRef.current[currentSlide], {
-      backgroundColor: "var(--lightest-slate)",
-      width: 8,
-      borderRadius: "50%",
-      duration: 0.3,
-      ease: "power1.inOut",
-    });
-
-    gsap.to(dotsRef.current[newIndex], {
-      backgroundColor: "var(--green-bright)",
-      width: 20,
-      borderRadius: "4px",
-      duration: 0.3,
-      ease: "power1.inOut",
-    });
-
-    // Standard transition timeline
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setCurrentSlide(newIndex);
-        setIsAnimating(false);
-
-        // Reset position of the outgoing slide
-        gsap.set(outgoing, {
-          x: direction > 0 ? "-100%" : "100%",
-        });
-      },
-    });
-
-    // Fade out current text content
-    if (outgoingText && outgoingText.children) {
-      tl.to(
-        Array.from(outgoingText.children),
-        {
-          opacity: 0,
-          y: -10,
-          duration: 0.4,
-          stagger: 0.05,
-          ease: "power1.in",
-        },
-        0,
-      );
-    }
-
-    // Standard slide transition
-    tl.to(
-      outgoing,
-      {
-        x: direction > 0 ? "-100%" : "100%",
-        opacity: 0,
-        duration: 0.8,
-        ease: "power1.inOut",
-      },
-      0,
-    );
-
-    // Prepare incoming slide
-    gsap.set(incoming, {
-      x: direction > 0 ? "100%" : "-100%",
-      opacity: 0,
-    });
-
-    // Bring in new slide
-    tl.to(
-      incoming,
-      {
-        x: "0%",
-        opacity: 1,
-        duration: 0.8,
-        ease: "power1.out",
-      },
-      0.1,
-    );
-
-    // Bring in new text
-    if (incomingText && incomingText.children) {
-      const incomingElements = Array.from(incomingText.children);
-
-      tl.fromTo(
-        incomingElements,
-        {
-          opacity: 0,
-          y: 10,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.08,
-          ease: "power1.out",
-        },
-        0.4,
-      );
-    }
-  };
-
-  const goToNextSlide = () => {
-    const newIndex = (currentSlide + 1) % blogArticles.length;
-    changeSlide(newIndex);
-  };
-
-  const goToPrevSlide = () => {
-    const newIndex = (currentSlide - 1 + blogArticles.length) % blogArticles.length;
-    changeSlide(newIndex);
-  };
+  }, [goToNextSlide, goToPrevSlide]);
 
   return (
     <section ref={sectionRef} className="blog-slideshow-section">

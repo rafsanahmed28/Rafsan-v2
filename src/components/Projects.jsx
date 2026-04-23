@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
@@ -14,6 +14,7 @@ import { BsDatabase } from "react-icons/bs";
 gsap.registerPlugin(ScrollTrigger, Flip);
 
 const projectsData = ProjectList;
+const sectionKeys = Object.keys(projectsData);
 
 function getFileIcon(file) {
   const iconStyle = { marginRight: 6, fontSize: 15, flexShrink: 0 };
@@ -32,7 +33,6 @@ const getReadmeIdx = (files) => {
 };
 
 export default function Projects() {
-  const sectionKeys = Object.keys(projectsData);
   const [selected, setSelected] = useState(
     sectionKeys.reduce((acc, section) => {
       acc[section] = { projectIdx: 0, fileIdx: 0 };
@@ -50,11 +50,6 @@ export default function Projects() {
   const filesListRef = useRef({});
 
   useEffect(() => {
-    contentRefs.current = sectionKeys.reduce((acc, section) => {
-      acc[section] = React.createRef();
-      return acc;
-    }, {});
-
     sectionKeys.forEach((section) => {
       foldersRef.current[section] = {};
       filesListRef.current[section] = {};
@@ -72,6 +67,10 @@ export default function Projects() {
       }));
     });
   }, []);
+
+  const saveContentRef = (section) => (el) => {
+    contentRefs.current[section] = el;
+  };
 
   useEffect(() => {
     gsap.fromTo(
@@ -93,7 +92,7 @@ export default function Projects() {
       },
     );
 
-    sectionsRef.current.forEach((section, index) => {
+    sectionsRef.current.forEach((section) => {
       if (!section) return;
 
       gsap.fromTo(
@@ -131,8 +130,7 @@ export default function Projects() {
     const chevron = folderEl.querySelector(".chevron-icon");
 
     if (isOpen) {
-      filesEl.style.display = "block";
-      filesEl.style.height = "auto";
+      gsap.set(filesEl, { display: "block", height: "auto" });
 
       gsap.set(fileItems, {
         opacity: 0,
@@ -164,7 +162,7 @@ export default function Projects() {
         stagger: 0.03,
         ease: "power2.in",
         onComplete: () => {
-          filesEl.style.display = "none";
+          gsap.set(filesEl, { display: "none" });
         },
       });
 
@@ -181,8 +179,7 @@ export default function Projects() {
   };
 
   const handleFolderToggle = (section, idx) => {
-    const state =
-      contentRefs.current[section]?.current && Flip.getState(contentRefs.current[section].current);
+    const state = contentRefs.current[section] && Flip.getState(contentRefs.current[section]);
 
     setActiveFolders((prev) => ({
       ...prev,
@@ -278,7 +275,7 @@ export default function Projects() {
       [section]: projectIdx,
     }));
 
-    const contentElement = contentRefs.current[section]?.current;
+    const contentElement = contentRefs.current[section];
 
     if (contentElement) {
       gsap.to(contentElement.children, {
@@ -333,8 +330,8 @@ export default function Projects() {
       const { projectIdx, fileIdx } = selected[section];
       const selectedFile = projectsData[section][projectIdx]?.files[fileIdx];
 
-      if (selectedFile?.type === "code" && contentRefs.current[section]?.current) {
-        const codeBlocks = contentRefs.current[section].current.querySelectorAll("pre code");
+      if (selectedFile?.type === "code" && contentRefs.current[section]) {
+        const codeBlocks = contentRefs.current[section].querySelectorAll("pre code");
 
         if (codeBlocks.length) {
           gsap.fromTo(
@@ -510,7 +507,7 @@ export default function Projects() {
                     </ul>
                   </div>
 
-                  <div className="directory-content" ref={contentRefs.current[section]}>
+                  <div className="directory-content" ref={saveContentRef(section)}>
                     {selectedFile.type === "info" ? (
                       <div
                         className="project-info-container"
@@ -591,7 +588,6 @@ export default function Projects() {
                       </div>
                     ) : (
                       <div className="code-viewer-container">
-                        {/* Code viewer remains unchanged */}
                         <div className="code-header">
                           <span className="file-name">{selectedFile.name}</span>
                           <div className="code-language-badge">{selectedFile.language}</div>

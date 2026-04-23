@@ -8,7 +8,7 @@
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. //
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { gsap } from "gsap";
 import "../styles/AnimatedRobot.css";
@@ -32,7 +32,7 @@ export default function AnimatedRobot() {
       transformOrigin: "left center",
     });
 
-    const eyesTl = gsap
+    gsap
       .timeline({
         repeat: -1,
         repeatDelay: 1,
@@ -203,7 +203,7 @@ export default function AnimatedRobot() {
     });
 
     // Planet
-    const planetTl = gsap
+    gsap
       .timeline({
         repeat: -1,
         yoyo: true,
@@ -323,7 +323,7 @@ export default function AnimatedRobot() {
     });
 
     // Song
-    const songTl = gsap
+    gsap
       .timeline({
         repeat: -1,
       })
@@ -382,7 +382,7 @@ export default function AnimatedRobot() {
       svgRef.current.appendChild(clone2);
     }
 
-    const notesAnimation = gsap.to(".notes", {
+    gsap.to(".notes", {
       y: gsap.utils.random(-50, -100, 10, true),
       x: gsap.utils.random(-50, 50, 25, true),
       opacity: 1,

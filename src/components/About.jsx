@@ -77,6 +77,7 @@ const About = () => {
             <a
               href="https://www.credly.com/badges/76531ad7-80dc-4eea-8523-983d8b70f941/public_url"
               target="_blank"
+              rel="noreferrer"
             >
               Google Data Analytics Certificate
             </a>{" "}
@@ -86,8 +87,8 @@ const About = () => {
           </p>
 
           <p ref={(el) => (textRefs.current[2] = el)}>
-            I have a strong appetite for learning and I'm always eager to explore new technologies.
-            This website is a testament to my journey where I picked up{" "}
+            I have a strong appetite for learning and I&apos;m always eager to explore new
+            technologies. This website is a testament to my journey where I picked up{" "}
             <span className="highlight">HTML, CSS & JavaScript</span> along the way. I also have a
             background in <span className="highlight"> Graphic Design. </span>
           </p>
@@ -102,8 +103,8 @@ const About = () => {
           </p>
 
           <p ref={(el) => (textRefs.current[4] = el)}>
-            Outside of work, I love playing video games. I'm also into aesthetic interior designs
-            and I love hoarding cool tech products.
+            Outside of work, I love playing video games. I&apos;m also into aesthetic interior
+            designs and I love hoarding cool tech products.
           </p>
         </div>
         <p className="about-timeline-link" ref={(el) => (textRefs.current[5] = el)}>

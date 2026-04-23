@@ -53,7 +53,6 @@ const JobList = () => {
   const keys = Object.keys(experienceItems);
 
   const contentRef = useRef(null);
-  const listsRef = useRef({});
   const oldValueRef = useRef(value);
 
   useEffect(() => {

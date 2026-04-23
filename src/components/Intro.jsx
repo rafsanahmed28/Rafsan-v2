@@ -18,17 +18,21 @@ const Intro = () => {
     if (hasRunRef.current) return;
     hasRunRef.current = true;
 
-    gsap.set([subtitleRef.current, buttonsRef.current], {
+    const subtitleEl = subtitleRef.current;
+    const buttonsEl = buttonsRef.current;
+    const animationEl = animationRef.current;
+
+    gsap.set([subtitleEl, buttonsEl], {
       opacity: 0,
       y: 20,
     });
 
-    gsap.set(animationRef.current, {
+    gsap.set(animationEl, {
       opacity: 0,
       scale: 0.95,
     });
 
-    gsap.to([subtitleRef.current, buttonsRef.current], {
+    gsap.to([subtitleEl, buttonsEl], {
       opacity: 1,
       y: 0,
       duration: 0.4,
@@ -37,7 +41,7 @@ const Intro = () => {
       delay: 0.6,
     });
 
-    gsap.to(animationRef.current, {
+    gsap.to(animationEl, {
       opacity: 1,
       scale: 1,
       duration: 0.6,
@@ -111,7 +115,7 @@ const Intro = () => {
 
       document.body.offsetHeight;
 
-      allChars.forEach((char, index) => {
+      allChars.forEach((char) => {
         const charWidth = char.getBoundingClientRect().width || 10;
 
         typingTl.to(cursorRef.current, {
@@ -143,14 +147,6 @@ const Intro = () => {
         });
       });
     }
-
-    return () => {
-      gsap.killTweensOf([
-        subtitleRef.current,
-        buttonsRef.current,
-        animationRef.current,
-      ]);
-    };
   }, []);
 
   return (
@@ -159,7 +155,7 @@ const Intro = () => {
         <div className="typist-content">
           <div className="text-typing-container" style={{ position: "relative" }}>
             <span className="intro-title" ref={textRef}>
-              Hi there! I'm{" "}
+              Hi there! I&apos;m{" "}
             </span>
             <span className="intro-name" ref={nameRef}>
               Rafsan.
@@ -200,10 +196,10 @@ const Intro = () => {
         </div>
 
         <div className="intro-subtitle" ref={subtitleRef}>
-          I'm a <span className="intro-subtitle-name">Founder, Developer </span> with a diverse
-          engineering background. I’m a builder at heart who loves solving problems. I've recently been experimenting a lot
-          with the new AI Agents & Automation. I love creating efficient and scalable solutions that
-          make a difference.
+          I&apos;m a <span className="intro-subtitle-name">Founder, Developer </span> with a diverse
+          engineering background. I’m a builder at heart who loves solving problems. I&apos;ve
+          recently been experimenting a lot with the new AI Agents & Automation. I love creating
+          efficient and scalable solutions that make a difference.
         </div>
 
         <div className="intro-buttons" ref={buttonsRef}>
