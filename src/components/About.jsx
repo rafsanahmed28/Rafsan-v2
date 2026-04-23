@@ -11,41 +11,50 @@ const About = () => {
   const textRefs = useRef([]);
 
   useEffect(() => {
-    gsap.fromTo(
-      ".about-title",
-      {
-        y: 30,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: "#about",
-          start: "top 80%",
-          toggleActions: "play none none reverse",
+    const ctx = gsap.context(() => {
+      const textNodes = textRefs.current.filter(Boolean);
+
+      gsap.fromTo(
+        ".about-title",
+        {
+          y: 30,
+          autoAlpha: 0,
         },
-      },
-    );
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.6,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: aboutRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        },
+      );
 
-    gsap.from(textRefs.current, {
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".about-content",
-        start: "top 75%",
-        toggleActions: "play none none reverse",
-      },
-    });
+      gsap.fromTo(
+        textNodes,
+        {
+          y: 30,
+          autoAlpha: 0,
+        },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: aboutRef.current,
+            start: "top 75%",
+            toggleActions: "play none none reverse",
+          },
+        },
+      );
+    }, aboutRef);
 
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   return (

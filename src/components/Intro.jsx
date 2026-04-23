@@ -7,7 +7,6 @@ import { gsap } from "gsap";
 const Intro = () => {
   const cursorRef = useRef(null);
   const subtitleRef = useRef(null);
-  const descRef = useRef(null);
   const buttonsRef = useRef(null);
   const animationRef = useRef(null);
   const textRef = useRef(null);
@@ -19,7 +18,7 @@ const Intro = () => {
     if (hasRunRef.current) return;
     hasRunRef.current = true;
 
-    gsap.set([subtitleRef.current, descRef.current, buttonsRef.current], {
+    gsap.set([subtitleRef.current, buttonsRef.current], {
       opacity: 0,
       y: 20,
     });
@@ -29,7 +28,7 @@ const Intro = () => {
       scale: 0.95,
     });
 
-    gsap.to([subtitleRef.current, descRef.current, buttonsRef.current], {
+    gsap.to([subtitleRef.current, buttonsRef.current], {
       opacity: 1,
       y: 0,
       duration: 0.4,
@@ -148,7 +147,6 @@ const Intro = () => {
     return () => {
       gsap.killTweensOf([
         subtitleRef.current,
-        descRef.current,
         buttonsRef.current,
         animationRef.current,
       ]);
@@ -203,11 +201,7 @@ const Intro = () => {
 
         <div className="intro-subtitle" ref={subtitleRef}>
           I'm a <span className="intro-subtitle-name">Founder, Developer </span> with a diverse
-          engineering background.
-        </div>
-
-        <div className="intro-desc" ref={descRef}>
-          I’m a builder at heart who loves solving problems. I've recently been experimenting a lot
+          engineering background. I’m a builder at heart who loves solving problems. I've recently been experimenting a lot
           with the new AI Agents & Automation. I love creating efficient and scalable solutions that
           make a difference.
         </div>

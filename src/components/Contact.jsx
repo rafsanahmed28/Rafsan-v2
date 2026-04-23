@@ -16,100 +16,93 @@ export default function Contact() {
   const yourEmail = "rafsanahmed2828@gmail.com";
 
   useEffect(() => {
-    gsap.set(".contact-container", {
-      width: "100%",
-      maxWidth: "600px",
-      height: "auto",
-      margin: "0 auto",
-    });
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: contactSectionRef.current,
+          start: "top 75%",
+          toggleActions: "play none none reverse",
+        },
+      });
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#contact",
-        start: "top 75%",
-        toggleActions: "play none none reverse",
-      },
-    });
+      tl.fromTo(
+        ".section-title",
+        {
+          y: 30,
+          autoAlpha: 0,
+        },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.6,
+          ease: "power2.out",
+        },
+      );
 
-    tl.fromTo(
-      "#contact .section-title",
-      {
-        y: 30,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-    );
+      tl.fromTo(
+        ".contact-intro",
+        {
+          y: 30,
+          autoAlpha: 0,
+        },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.6,
+          ease: "power2.out",
+        },
+        "-=0.3",
+      );
 
-    tl.fromTo(
-      ".contact-intro",
-      {
-        y: 30,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      "-=0.3",
-    );
+      tl.fromTo(
+        ".contact-container",
+        {
+          y: 50,
+          autoAlpha: 0,
+        },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.8,
+          ease: "power3.out",
+        },
+        "-=0.3",
+      );
 
-    tl.fromTo(
-      ".contact-container",
-      {
-        y: 50,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: "power3.out",
-      },
-      "-=0.3",
-    );
+      tl.fromTo(
+        ".form-group",
+        {
+          y: 20,
+          autoAlpha: 0,
+        },
+        {
+          y: 0,
+          autoAlpha: 1,
+          stagger: 0.15,
+          duration: 0.5,
+          ease: "power2.out",
+        },
+        "-=0.4",
+      );
 
-    tl.fromTo(
-      ".form-group",
-      {
-        y: 20,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        stagger: 0.15,
-        duration: 0.5,
-        ease: "power2.out",
-      },
-      "-=0.4",
-    );
+      tl.fromTo(
+        [".contact-actions", ".contact-info"],
+        {
+          y: 15,
+          autoAlpha: 0,
+        },
+        {
+          y: 0,
+          autoAlpha: 1,
+          stagger: 0.1,
+          duration: 0.5,
+          ease: "power2.out",
+        },
+        "-=0.2",
+      );
+    }, contactSectionRef);
 
-    tl.fromTo(
-      [".contact-actions", ".contact-info"],
-      {
-        y: 15,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        stagger: 0.1,
-        duration: 0.5,
-        ease: "power2.out",
-      },
-      "-=0.2",
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   const handleSend = (e) => {
@@ -171,10 +164,6 @@ export default function Contact() {
           { opacity: 0, y: 20 },
           { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
         );
-
-        // TODO(v2-cleanup): isSubmitted state was never wired up in v1.
-        // eslint-disable-next-line no-undef
-        setIsSubmitted(false);
       },
     });
   };

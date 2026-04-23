@@ -134,8 +134,10 @@ const JobList = () => {
         {keys.map((key, i) =>
           value === i ? (
             <div key={key} className="joblist-panel">
-              <span className="joblist-job-title">{experienceItems[key]["jobTitle"] + " "}</span>
-              <span className="joblist-job-company">{key}</span>
+              <div className="joblist-heading">
+                <span className="joblist-job-title">{experienceItems[key]["jobTitle"]}</span>
+                <span className="joblist-job-company">{key}</span>
+              </div>
               <div className="joblist-duration">{experienceItems[key]["duration"]}</div>
               <ul className="job-description">
                 {experienceItems[key]["desc"].map((descItem, j) => (
